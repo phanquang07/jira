@@ -10,7 +10,7 @@ import {
 import { Button, Input } from "antd";
 import { useDispatch } from "react-redux";
 import { Link, Router } from "react-router-dom";
-import { registerAction } from "../../redux/action/userAction";
+import { registerAction } from "../../redux/action/loginAction";
 import { history } from "../../App";
 
 export default function Register() {
@@ -41,7 +41,7 @@ export default function Register() {
   const { handleSubmit, handleChange, handleBlur, values, errors, touched } =
     registerFormik;
   return (
-    <>
+    <div className="register">
       <h3 style={{ fontWeight: "600", fontSize: 30, textAlign: "center" }}>
         Đăng ký
       </h3>
@@ -163,6 +163,6 @@ export default function Register() {
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 }

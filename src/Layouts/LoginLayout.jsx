@@ -7,11 +7,7 @@ export default function LoginLayout(props) {
       exact
       path={props.path}
       render={(propsRoute) => {
-        return (
-          <>
-            <props.component {...propsRoute} />
-          </>
-        );
+        return <props.component {...propsRoute} />;
       }}
     />
   );

@@ -6,10 +6,10 @@ if (localStorage.getItem(USER_LOGIN)) {
   uLogin = JSON.parse(localStorage.getItem(USER_LOGIN))
 }
 const initialState = {
-  uLogin: uLogin
+  uLogin
 }
 
-export const userReducer = (state = initialState, action) => {
+export const loginReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN:
       state.uLogin = action.uLogin

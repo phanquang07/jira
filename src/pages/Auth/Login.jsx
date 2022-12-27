@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { Link, Router } from "react-router-dom";
 import { history } from "../../App";
-import { loginAction } from "../../redux/action/userAction";
+import { loginAction } from "../../redux/action/loginAction";
 
 export default function Login() {
   const dispatch = useDispatch();

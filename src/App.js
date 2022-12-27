@@ -1,5 +1,6 @@
+import './App.css'
 import { createBrowserHistory } from "history";
-import { Router, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import { HomeLayout } from "./Layouts/HomeLayout";
 import LoginLayout from "./Layouts/LoginLayout";
 import Login from "./pages/Auth/Login";
@@ -8,6 +9,7 @@ import Board from "./pages/Board/Board";
 import Comments from "./pages/Comments/Comments";
 import Profile from "./pages/Profile/Profile";
 import ProjectManagement from "./pages/ProjectManagement/ProjectManagement";
+import CreateProject from './pages/CreateProject/CreateProject';
 
 export const history = createBrowserHistory()
 
@@ -21,8 +23,10 @@ function App() {
         <LoginLayout exact path='/profile' component={Profile} />
         <HomeLayout exact path='/project-management' component={ProjectManagement} />
         <HomeLayout exact path='/comment' component={Comments} />
+        <HomeLayout exact path='/project-category' component={CreateProject} />
 
-        <HomeLayout exact path='/' component={Board} />
+
+        <HomeLayout exact path='/' component={ProjectManagement} />
       </Switch>
     </Router>
   );
