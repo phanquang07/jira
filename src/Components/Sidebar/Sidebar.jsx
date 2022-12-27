@@ -13,7 +13,7 @@ export default function Sidebar() {
           <NavLink to="/project-management">Project Management</NavLink>
         </li>
         <li className="sidebar-item">
-          <NavLink to="/project-category">Project Category</NavLink>
+          <NavLink to="/Project/createProject">Create Project</NavLink>
         </li>
         {/* <li className="sidebar-item">
           <NavLink to="/login">Login</NavLink>

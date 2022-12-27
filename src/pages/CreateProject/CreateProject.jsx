@@ -89,28 +89,7 @@ export default function CreateProject(props) {
             </div>
           ) : null}
         </div>
-        {/* URL */}
-        <div className="mb-3">
-          <label className="form-label">URL</label>
-          <input
-            className="form-control"
-            name="projectUrl"
-            placeholder="https://github.com/phanquang07/jira"
-            // required="required"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.projectUrl}
-          />
-          {touched.projectUrl && errors.projectUrl ? (
-            <div
-              className="d-flex text-danger"
-              style={{ margin: "0px", color: "red" }}
-            >
-              {errors.projectUrl}
-            </div>
-          ) : null}
           {/* Category */}
-        </div>
         <div className="mb-3">
           <label className="form-label">Category</label>
           <select

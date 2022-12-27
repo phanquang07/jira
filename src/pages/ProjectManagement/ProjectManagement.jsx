@@ -1,4 +1,4 @@
-import { Button, Popover, Table } from "antd";
+import { Button, Popover, Space, Table } from "antd";
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,12 +18,12 @@ export default function ProjectManagement() {
   const searchRef = useRef(null);
 
   const [state, setState] = useState({
-    filteredInfo: null,
-    sortedInfo: null,
+    filteredInfo: {},
+    sortedInfo: {},
   });
 
-  const handleChange = (pagination, filters, sorter) => {
-    console.log("pagination, filters, sorter: ", pagination, filters, sorter);
+  const handleChange = (pagination, filters, sorter, extra) => {
+    console.log("filters, sorter: ", pagination, filters, sorter, extra);
     setState({
       filteredInfo: filters,
       sortedInfo: sorter,
@@ -38,23 +38,14 @@ export default function ProjectManagement() {
 
   const clearAll = () => {
     setState({
-      filteredInfo: null,
-      sortedInfo: null,
+      filteredInfo: {},
+      sortedInfo: {},
     });
-
-    const sortName = () => {
-      setState({
-        sortedInfo: {
-          order: "descend",
-          columnKey: "name",
-        },
-      });
-    };
-
-    let { sortedInfo, filteredInfo } = state;
-    sortedInfo = sortedInfo || {};
-    filteredInfo = filteredInfo || {};
   };
+
+  let { sortedInfo, filteredInfo } = state;
+  sortedInfo = sortedInfo || {};
+  filteredInfo = filteredInfo || {};
 
   // console.log("projectList: ", projectList);
   let dataConvert = projectList.map((item) => {
@@ -80,18 +71,16 @@ export default function ProjectManagement() {
       title: "Project Name",
       dataIndex: "projectName",
       key: "projectName",
-      render: (text, record, index) => {
+      render: (text, record) => {
         return (
-          <NavLink
-            to={`/project/board/${record.id}`}
-            style={{ cursor: "pointer" }}
-          >
+          <NavLink to={`/board/${record.id}`} style={{ cursor: "pointer" }}>
             {text}
           </NavLink>
         );
       },
       sorter: (a, b) => a.projectName.length - b.projectName.length,
-      // sortOrder: sortedInfo.columnKey === "projectName" && sortedInfo.order,
+      sortOrder:
+        state.sortedInfo.columnKey === "projectName" && sortedInfo.order,
       ellipsis: true,
     },
     {
@@ -105,8 +94,7 @@ export default function ProjectManagement() {
       ],
       // filteredValue: filteredInfo.categoryName || null,
       onFilter: (value, record) => record.categoryName.includes(value),
-      sorter: (a, b) =>
-        a.categoryName.length - b.categoryName.length,
+      sorter: (a, b) => a.categoryName.length - b.categoryName.length,
       // sortOrder:
       //   sortedInfo.columnKey === "categoryName" && sortedInfo.order,
       // ellipsis: true,
@@ -311,58 +299,33 @@ export default function ProjectManagement() {
   ];
 
   return (
-    <>
+    <div className="mt-5">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "20px",
+        }}
+      >
+        <Space style={{ marginBottom: 16 }}>
+          <Button onClick={clearFilters}>Clear filters</Button>
+          <Button onClick={clearAll}>Clear filters and sorters</Button>
+        </Space>
+        <Space>
+          <NavLink to="/Project/createProject">
+            <button className="btn btn-success btn-sm" type="button">
+              <i className="fa fa-plus"></i>
+              <span style={{ marginLeft: 4 }}>Create New Project</span>
+            </button>
+          </NavLink>
+        </Space>
+      </div>
       <Table
         columns={columns}
-        // rowKey={"id"}
+        rowKey={"id"}
         dataSource={dataConvert}
-        // onChange={handleChange}
+        onChange={handleChange}
       />
-
-      {/* <div>{renderProjectManagement()}</div> */}
-      {/* <div>
-        <Table
-          columns={columns}
-          rowKey={"id"}
-          // dataSource={dataConvert}
-          // onChange={handleChange}
-        />
-      </div> */}
-    </>
-
-    // <div className="mt-5">
-    //   <Breadcrumb>
-    //     <Breadcrumb.Item>Home</Breadcrumb.Item>
-    //     <Breadcrumb.Item>
-    //       <a href="">Application Center</a>
-    //     </Breadcrumb.Item>
-    //     <Breadcrumb.Item>
-    //       <a href="">Application List</a>
-    //     </Breadcrumb.Item>
-    //     <Breadcrumb.Item>An Application</Breadcrumb.Item>
-    //   </Breadcrumb>
-    //   <div */
-    //     style={{
-    //       display: "flex",
-    //       justifyContent: "space-between",
-    //       marginBottom: "20px",
-    //     }}
-    //   >
-    //     <Space style={{ marginBottom: 16 }}>
-    //       <Button>Sort Name</Button>
-    //       <Button>Clear filters</Button>
-    //       <Button>Clear filters and sorters</Button>
-    //     </Space>
-    //     <Space>
-    //       <NavLink to="/project-management/settings">
-    //         <button className="btn btn-success btn-sm" type="button">
-    //           <i className="fa fa-plus"></i>
-    //           <span style={{ marginLeft: 4 }}>Create New Project</span>
-    //         </button>
-    //       </NavLink>
-    //     </Space>
-    //   </div>
-    //   <Table />
-    // </div>
+    </div>
   );
 }

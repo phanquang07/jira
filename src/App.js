@@ -23,7 +23,7 @@ function App() {
         <LoginLayout exact path='/profile' component={Profile} />
         <HomeLayout exact path='/project-management' component={ProjectManagement} />
         <HomeLayout exact path='/comment' component={Comments} />
-        <HomeLayout exact path='/project-category' component={CreateProject} />
+        <HomeLayout exact path='/Project/createProject' component={CreateProject} />
 
 
         <HomeLayout exact path='/' component={ProjectManagement} />
