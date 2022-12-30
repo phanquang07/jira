@@ -1,7 +1,7 @@
-import { GET_ALL_PROJECT } from "../../util/setting";
+import { CREATE_PROJECT, GET_ALL_PROJECT } from "../../util/setting";
 
 const initialState = {
-  projectList: []
+  projectList: [],
 }
 
 export const projectReducer = (state = initialState, action) => {
@@ -10,7 +10,9 @@ export const projectReducer = (state = initialState, action) => {
       // console.log('action list project: ', action.projectList);
       state.projectList = action.projectList
       return { ...state }
-
+    case CREATE_PROJECT:
+      state.newProject = [...state.projectList, action.newProject]
+      return { ...state }
     default:
       return state
   }

@@ -6,6 +6,7 @@ export const ID_TOKEN = localStorage.getItem(ACCESS_TOKEN)
 
 export const GET_ALL_PROJECT = 'GET_ALL_PROJECT'
 export const GET_PROJECT_CATEGOTY = 'GET_PROJECT_CATEGOTY'
+export const CREATE_PROJECT = 'CREATE_PROJECT'
 
 
 export const STATUS_CODE = {
