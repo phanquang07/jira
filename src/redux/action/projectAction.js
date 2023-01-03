@@ -28,11 +28,14 @@ export const getAllProjectAction = () => {
   }
 }
 
-export const createProject = (newProject) => {
+export const createProjectAction = (values) => {
+  // console.log('values: ', values);
   return (dispatch2) => {
     axios({
       url: `${URL_API}/Project/createProject`,
       method: "POST",
+      data: { ...values, creator: "Anonymous" },
+      "content-type": "application/json",
       headers: {
         TokenCybersoft: TOKEN_JIRA,
         // Authorization: 'Bearer ' + ID_TOKEN
@@ -40,13 +43,17 @@ export const createProject = (newProject) => {
     })
       .then((res) => {
         // console.log('GET LIST: ', res.data.content);
+
         let action = {
           type: CREATE_PROJECT,
           newProject: {
-            ...newProject,
-            // creator
+            ...values,
+            // projectCategory: {
+            //   id: values.projectCategoryId,
+            // }
           }
         }
+        // console.log("action.projectCategory.id: ", action);
         dispatch2(action)
       })
       .catch((err) => {

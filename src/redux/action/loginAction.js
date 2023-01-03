@@ -15,7 +15,7 @@ export const registerAction = (userInfo) => {
       }
     })
       .then((res) => {
-        console.log('register res: ', res);
+        // console.log('register res: ', res);
         // <Space
         //   direction="vertical"
         //   style={{
@@ -52,7 +52,7 @@ export const loginAction = (userInfo) => {
       }
     })
       .then((res) => {
-        console.log('res signin: ', res.data.content);
+        // console.log('res signin: ', res.data.content);
         localStorage.setItem(ACCESS_TOKEN, res.data.content.accessToken)
         let userInfo = JSON.stringify(res.data.content)
         localStorage.setItem(USER_LOGIN, userInfo)

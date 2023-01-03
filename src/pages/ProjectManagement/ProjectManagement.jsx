@@ -23,7 +23,7 @@ export default function ProjectManagement() {
   });
 
   const handleChange = (pagination, filters, sorter, extra) => {
-    console.log("filters, sorter: ", pagination, filters, sorter, extra);
+    // console.log("filters, sorter: ", pagination, filters, sorter, extra);
     setState({
       filteredInfo: filters,
       sortedInfo: sorter,
@@ -105,9 +105,7 @@ export default function ProjectManagement() {
 
   // console.log("projectList: ", projectList);
   let dataListProject = projectList.map((item) => {
-    console.log("item: ", item);
-    // const creatorName = item.creator.name;
-    // const memberName = item.members.name;
+    // console.log("item: ", item);
     return {
       ...item,
       projectCategoryName: item.projectCategoryName,

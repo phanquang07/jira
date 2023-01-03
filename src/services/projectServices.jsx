@@ -13,7 +13,7 @@ export const projectServices = () => {
           Authorization: "Bearer " + ID_TOKEN,
         },
       });
-      console.log(res);
+      // console.log(res);
       setProjectList(res.data.content);
     } catch (err) {
       console.log("project list err: ", err);

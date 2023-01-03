@@ -1,20 +1,22 @@
 import { Editor } from "@tinymce/tinymce-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import React from "react";
 import { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { projectCategoryAction } from "../../redux/action/projectCategoryAction";
+import { createProjectAction } from "../../redux/action/projectAction";
 
 export default function CreateProject(props) {
-  const projectCategory = useSelector(
-    (state) => state.projectCategoryReducer.projectCategory
-  );
-  console.log("projectCategory: ", projectCategory);
+  const projectCategory = useSelector((state) => {
+    return state.projectCategoryReducer.projectCategory;
+  });
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     getApiProjectCategory();
+    // getApiCreateProject();
   }, []);
 
   const getApiProjectCategory = () => {
@@ -22,11 +24,16 @@ export default function CreateProject(props) {
     dispatch(action);
   };
 
+  // const getApiCreateProject = () => {
+  //   let action = createProjectAction(values);
+  //   dispatch(action);
+  // }
+
   const renderProjectCategory = () => {
-    return projectCategory.map((item) => {
+    return projectCategory.map((projectCategory) => {
       return (
-        <option key={item.id} value={item.id}>
-          {item.projectCategoryName}
+        <option key={projectCategory.id} value={projectCategory.id}>
+          {projectCategory.projectCategoryName}
         </option>
       );
     });
@@ -35,17 +42,17 @@ export default function CreateProject(props) {
   const categoryFormik = useFormik({
     initialValues: {
       projectName: "",
-      projectUrl: "",
+      projectCategoryId: projectCategory.id,
       description: "",
-      projectCategoryId: projectCategory[0]?.id,
+      alias: "",
     },
     validationSchema: Yup.object({
       projectName: Yup.string().required("Vui lòng nhập tên dự án"),
-      projectUrl: Yup.string().required("Vui lòng nhập đường dẫn"),
     }),
     onSubmit: (values) => {
-      console.log("values ceate project: ", values);
-      let action = projectCategoryAction(values);
+      // console.log("values create project: ", values);
+      // let action = projectCategoryAction(values);
+      let action = createProjectAction(values);
       dispatch(action);
     },
   });
@@ -89,7 +96,7 @@ export default function CreateProject(props) {
             </div>
           ) : null}
         </div>
-          {/* Category */}
+        {/* Category */}
         <div className="mb-3">
           <label className="form-label">Category</label>
           <select
@@ -102,6 +109,28 @@ export default function CreateProject(props) {
             {renderProjectCategory()}
           </select>
         </div>
+        {/* Alias */}
+        <div className="mb-3">
+          <label className="form-label">Alias</label>
+          <input
+            className="form-control"
+            name="alias"
+            placeholder="Alias"
+            // required="required"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.alias}
+          />
+          {touched.alias && errors.alias ? (
+            <div
+              className="d-flex text-danger"
+              style={{ margin: "0px", color: "red" }}
+            >
+              {errors.alias}
+            </div>
+          ) : null}
+        </div>
+        {/* Description */}
         <div className="mb-3">
           <label className="form-label">Description</label>
           <Editor
@@ -125,13 +154,14 @@ export default function CreateProject(props) {
             }}
             onEditorChange={handleEditorChange}
             value={values.description}
+            onClick={(values) => {
+              // getApiCreateProject(values);
+              const action = createProjectAction(values);
+              dispatch(action);
+            }}
           />
         </div>
-        <button
-          className="btn btn-primary"
-          type="submit"
-          onSubmit={handleSubmit}
-        >
+        <button className="btn btn-primary" type="submit">
           Save
         </button>
         <button
