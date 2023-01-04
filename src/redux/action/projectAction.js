@@ -29,28 +29,28 @@ export const getAllProjectAction = () => {
 }
 
 export const createProjectAction = (values) => {
-  // console.log('values: ', values);
+  console.log('values: ', values);
   return (dispatch2) => {
     axios({
-      url: `${URL_API}/Project/createProject`,
+      url: `${URL_API}/Project/createProjectAuthorize`,
       method: "POST",
       data: { ...values, creator: "Anonymous" },
       "content-type": "application/json",
       headers: {
         TokenCybersoft: TOKEN_JIRA,
-        // Authorization: 'Bearer ' + ID_TOKEN
+        Authorization: 'Bearer ' + ID_TOKEN
       }
     })
       .then((res) => {
-        // console.log('GET LIST: ', res.data.content);
+        console.log('GET LIST: ', res.data.content);
 
         let action = {
           type: CREATE_PROJECT,
           newProject: {
             ...values,
-            // projectCategory: {
-            //   id: values.projectCategoryId,
-            // }
+            projectCategory: {
+              id: values.categoryId,
+            }
           }
         }
         // console.log("action.projectCategory.id: ", action);

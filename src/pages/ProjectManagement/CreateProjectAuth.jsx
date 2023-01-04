@@ -42,7 +42,7 @@ export default function CreateProject(props) {
   const categoryFormik = useFormik({
     initialValues: {
       projectName: "",
-      projectCategoryId: projectCategory.id,
+      categoryId: projectCategory.id,
       description: "",
       alias: "",
     },
@@ -50,7 +50,7 @@ export default function CreateProject(props) {
       projectName: Yup.string().required("Vui lòng nhập tên dự án"),
     }),
     onSubmit: (values) => {
-      // console.log("values create project: ", values);
+      console.log("values create project: ", values);
       // let action = projectCategoryAction(values);
       let action = createProjectAction(values);
       dispatch(action);
@@ -101,34 +101,13 @@ export default function CreateProject(props) {
           <label className="form-label">Category</label>
           <select
             className="form-control"
-            name="projectCategoryId"
+            name="categoryId"
             onChange={handleChange}
             onBlur={handleBlur}
-            value={values.projectCategoryId}
+            value={values.categoryId}
           >
             {renderProjectCategory()}
           </select>
-        </div>
-        {/* Alias */}
-        <div className="mb-3">
-          <label className="form-label">Alias</label>
-          <input
-            className="form-control"
-            name="alias"
-            placeholder="Alias"
-            // required="required"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.alias}
-          />
-          {touched.alias && errors.alias ? (
-            <div
-              className="d-flex text-danger"
-              style={{ margin: "0px", color: "red" }}
-            >
-              {errors.alias}
-            </div>
-          ) : null}
         </div>
         {/* Description */}
         <div className="mb-3">

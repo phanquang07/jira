@@ -374,7 +374,7 @@ export default function ProjectManagement() {
           <Button onClick={clearAll}>Clear filters and sorters</Button>
         </Space>
         <Space>
-          <NavLink to="/Project/createProject">
+          <NavLink to="/Project/createProjectAuthorize">
             <button className="btn btn-success btn-sm" type="button">
               <i className="fa fa-plus"></i>
               <span style={{ marginLeft: 4 }}>Create New Project</span>
