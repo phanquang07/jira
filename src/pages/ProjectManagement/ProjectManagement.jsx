@@ -5,22 +5,27 @@ import { getAllProjectAction } from "../../redux/action/projectAction";
 import { useRef } from "react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { AutoComplete, Button, Popover, Space, Table, Tag } from "antd";
-import Avatar from "antd/es/avatar/avatar";
+import { AutoComplete, Avatar, Button, Popover, Space, Table, Tag } from "antd";
+import { SEARCH_USER } from "../../util/setting";
 
 export default function ProjectManagement() {
   const projectList = useSelector((state) => state.projectReducer.projectList);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    getApiProjectManagement();
-  }, []);
+  const usersSearched = useSelector((state) => state.userReducer.usersSearched);
+  console.log("usersSearched: ", usersSearched);
+  const [userSearch, setUserSearch] = useState("");
 
-  const searchRef = useRef(null);
+  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     filteredInfo: null,
     sortedInfo: null,
   });
+
+  useEffect(() => {
+    getApiProjectManagement();
+  }, []);
+
+  const searchRef = useRef(null);
 
   const handleChange = (pagination, filters, sorter, extra) => {
     // console.log("filters, sorter: ", pagination, filters, sorter, extra);
@@ -43,65 +48,59 @@ export default function ProjectManagement() {
     });
   };
 
-  // const content = (record, index) => {
-  //   // console.log('record: ', record);
-  //   return (
-  //     <div>
-  //       <AutoComplete
-  //         value={usernameSearch}
-  //         onChange={(value) => {
-  //           setUsernameSearch(value);
-  //         }}
-  //         options={
-  //           // usersSearched?.map((user, index) => {
-  //           //     return { label: user.login, value: user.id, key: index }
-  //           // })
-
-  //           usersSearched
-  //             ?.filter((user) => {
-  //               let index = record.members.findIndex(
-  //                 (member) => member.userId === user.userId
-  //               );
-  //               if (index !== -1) {
-  //                 return false;
-  //               }
-  //               return true;
-  //             })
-  //             .map((user, index) => {
-  //               return { label: user.login, value: user.userId, key: index };
-  //             })
-  //         }
-  //         style={{ width: "100%" }}
-  //         onSelect={(value, option) => {
-  //           setUsernameSearch(option.label);
-  //           dispatch({
-  //             type: ADD_MEMBER_TO_PROJECT_SAGA,
-  //             project: {
-  //               ...record,
-  //               members: [...record.members, { id: value }],
-  //             },
-  //           });
-  //         }}
-  //         onSearch={(value) => {
-  //           if (searchRef.current) {
-  //             clearTimeout(searchRef.current);
-  //           }
-  //           searchRef.current = setTimeout(() => {
-  //             dispatch({
-  //               type: SEARCH_USER_SAGA,
-  //               username: value,
-  //             });
-  //           }, 300);
-  //         }}
-  //         placeholder="Username"
-  //       />
-  //     </div>
-  //   );
-  // };
-
   let { sortedInfo, filteredInfo } = state;
   sortedInfo = sortedInfo || {};
   filteredInfo = filteredInfo || {};
+
+  const content = (record, index) => {
+    console.log("record: ", record);
+    return (
+      <div>
+        <AutoComplete
+          value={userSearch}
+          onChange={(value) => {
+            setUserSearch(value);
+          }}
+          options={usersSearched
+            ?.filter((user) => {
+              let index = record.members.findIndex(
+                (member) => member.userId === user.userId
+              );
+              if (index !== -1) {
+                return false;
+              }
+              return true;
+            })
+            .map((user, index) => {
+              return { label: user.login, value: user.userId, key: index };
+            })}
+          style={{ width: "100%" }}
+          onSelect={(value, option) => {
+            setUserSearch(option.label);
+            dispatch({
+              type: GET_LIST_MEMBER,
+              project: {
+                ...record,
+                members: [...record.members, { id: value }],
+              },
+            });
+          }}
+          onSearch={(value) => {
+            if (searchRef.current) {
+              clearTimeout(searchRef.current);
+            }
+            searchRef.current = setTimeout(() => {
+              dispatch({
+                type: SEARCH_USER,
+                username: value,
+              });
+            }, 300);
+          }}
+          placeholder="Username"
+        />
+      </div>
+    );
+  };
 
   // console.log("projectList: ", projectList);
   let dataListProject = projectList.map((item) => {
@@ -132,7 +131,7 @@ export default function ProjectManagement() {
       key: "projectName",
       render: (text, record) => {
         return (
-          <NavLink to={`/board/${record.id}`} style={{ cursor: "pointer" }}>
+          <NavLink to={`/board/${record.alias}`} style={{ cursor: "pointer" }}>
             {text}
           </NavLink>
         );
@@ -180,120 +179,120 @@ export default function ProjectManagement() {
         );
       },
     },
-    // {
-    //   title: "Members",
-    //   dataIndex: "member",
-    //   key: "member",
-    //   render: (text, record, index) => {
-    //     return (
-    //       <>
-    //         <Avatar.Group
-    //           maxCount={2}
-    //           maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
-    //           key={index}
-    //         >
-    //           {record.members.map((member) => {
-    //             console.log("member: ", member);
-    //             return member.avatar === "" || member.avatar === null ? (
-    //               <Avatar key={member.userId}>
-    //                 {member.login.charAt(0).toUpperCase()}
-    //               </Avatar>
-    //             ) : (
-    //               <Avatar src={member.avatar} key={member.userId} />
-    //             );
-    //           })}
-    //         </Avatar.Group>
-    //         <Popover
-    //           placement="topLeft"
-    //           title={"Add Member"}
-    //           // content={content(record, index)}
-    //           trigger="click"
-    //         >
-    //           <Button
-    //             type="primary"
-    //             size="small"
-    //             style={{ fontWeight: "bold", fontSize: 15 }}
-    //           >
-    //             +
-    //           </Button>
-    //         </Popover>
+    {
+      title: "Members",
+      dataIndex: "member",
+      key: "member",
+      render: (text, record, index) => {
+        return (
+          <>
+            <Avatar.Group
+              maxCount={2}
+              maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+              key={index}
+            >
+              {record.members.map((member) => {
+                // console.log("member: ", member);
+                return member.avatar === "" || member.avatar === null ? (
+                  <Avatar key={member.userId}>
+                    {member.login.charAt(0).toUpperCase()}
+                  </Avatar>
+                ) : (
+                  <Avatar src={member.avatar} key={member.userId} />
+                );
+              })}
+            </Avatar.Group>
+            <Popover
+              placement="topLeft"
+              title={"Add Member"}
+              content={content(record, index)}
+              trigger="click"
+            >
+              <Button
+                type="primary"
+                size="small"
+                style={{ fontWeight: "bold", fontSize: 15 }}
+              >
+                +
+              </Button>
+            </Popover>
 
-    //         <Popover
-    //           placement="topLeft"
-    //           title={"Members"}
-    //           content={() => {
-    //             return (
-    //               <table className="table">
-    //                 <thead>
-    //                   <tr>
-    //                     <th>ID</th>
-    //                     <th>Avatar</th>
-    //                     <th>Account</th>
-    //                     <th>Action</th>
-    //                   </tr>
-    //                 </thead>
-    //                 <tbody>
-    //                   {record.members?.map((member) => {
-    //                     return (
-    //                       <tr key={member.userId}>
-    //                         <th>{member.userId}</th>
-    //                         <td>
-    //                           {member.avatar === "" ||
-    //                           member.avatar === null ? (
-    //                             <Avatar key={member.id}>
-    //                               {member.login.charAt(0).toUpperCase()}
-    //                             </Avatar>
-    //                           ) : (
-    //                             <Avatar
-    //                               src={member.avatar}
-    //                               key={member.userId}
-    //                             />
-    //                           )}
-    //                         </td>
-    //                         <td>{member.login}</td>
-    //                         <td>
-    //                           <Button
-    //                             className="ml-1"
-    //                             type="danger"
-    //                             size="small"
-    //                             style={{ fontWeight: "bold", fontSize: 15 }}
-    //                             onClick={() => {
-    //                               dispatch({
-    //                                 type: DELETE_MEMBER_FROM_PROJECT_SAGA,
-    //                                 project: {
-    //                                   ...record,
-    //                                   members: record.members.filter(
-    //                                     (item) => item.id !== member.id
-    //                                   ),
-    //                                 },
-    //                               });
-    //                             }}
-    //                           >
-    //                             X
-    //                           </Button>
-    //                         </td>
-    //                       </tr>
-    //                     );
-    //                   })}
-    //                 </tbody>
-    //               </table>
-    //             );
-    //           }}
-    //           trigger="click"
-    //         >
-    //           <Button
-    //             className="ml-1"
-    //             type="danger"
-    //             size="small"
-    //             style={{ fontWeight: "bold", fontSize: 15 }}
-    //           >
-    //             X
-    //           </Button>
-    //         </Popover>
-    //       </>
-    //     );
-    //   },
-    // },
+            <Popover
+              placement="topLeft"
+              title={"Members"}
+              content={() => {
+                return (
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Avatar</th>
+                        <th>Account</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {record.members?.map((member) => {
+                        return (
+                          <tr key={member.userId}>
+                            <th>{member.userId}</th>
+                            <td>
+                              {member.avatar === "" ||
+                              member.avatar === null ? (
+                                <Avatar key={member.id}>
+                                  {member.login.charAt(0).toUpperCase()}
+                                </Avatar>
+                              ) : (
+                                <Avatar
+                                  src={member.avatar}
+                                  key={member.userId}
+                                />
+                              )}
+                            </td>
+                            <td>{member.login}</td>
+                            <td>
+                              <Button
+                                className="ml-1"
+                                type="danger"
+                                size="small"
+                                style={{ fontWeight: "bold", fontSize: 15 }}
+                                // onClick={() => {
+                                //   dispatch({
+                                //     type: DELETE_MEMBER_FROM_PROJECT_SAGA,
+                                //     project: {
+                                //       ...record,
+                                //       members: record.members.filter(
+                                //         (item) => item.id !== member.id
+                                //       ),
+                                //     },
+                                //   });
+                                // }}
+                              >
+                                X
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                );
+              }}
+              trigger="click"
+            >
+              <Button
+                className="ml-1"
+                type="danger"
+                size="small"
+                style={{ fontWeight: "bold", fontSize: 15 }}
+              >
+                X
+              </Button>
+            </Popover>
+          </>
+        );
+      },
+    },
     {
       title: "Action",
       dataIndex: "",

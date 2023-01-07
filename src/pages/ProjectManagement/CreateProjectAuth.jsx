@@ -50,8 +50,7 @@ export default function CreateProject(props) {
       projectName: Yup.string().required("Vui lòng nhập tên dự án"),
     }),
     onSubmit: (values) => {
-      console.log("values create project: ", values);
-      // let action = projectCategoryAction(values);
+      // console.log("values create project: ", values);
       let action = createProjectAction(values);
       dispatch(action);
     },
